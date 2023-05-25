@@ -1,0 +1,33 @@
+import discord
+import random
+
+# Initialize the Discord client
+client = discord.Client()
+
+# List of jokes
+jokes = [
+    "Why did the man get hit by a car? Because he wasn't used to taking directions from a woman!",
+    "Why did the woman bring a ladder to the bar? She heard the drinks were on the house, just like her!",
+    "What do you call a man who can't make decisions? A politician!",
+    "What's the difference between a snowman and a snowwoman? Snowballs!",
+    # Add more jokes here
+]
+
+@client.event
+async def on_ready():
+    print(f"We have logged in as {client.user}")
+
+@client.event
+async def on_message(message):
+    if message.author == client.user:
+        return
+
+    if message.content == "/alvajoke":
+        # Select a random joke
+        random_joke = random.choice(jokes)
+
+        # Send the joke as a message in the same channel
+        await message.channel.send(random_joke)
+
+# Replace 'YOUR_TOKEN' with your Discord bot token
+client.run('YOUR_TOKEN')
