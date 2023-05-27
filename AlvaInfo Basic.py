@@ -1,62 +1,10 @@
 import discord
 from discord.ext import commands
-import gspread
-from google.oauth2.service_account import Credentials
 
-intents = discord.Intents.all()
+intents = discord.Intents.default()
+intents.message_content = True
+
 bot = commands.Bot(command_prefix='!', intents=intents)
-
-# Load the credentials using the OAuth client ID credentials
-credentials = Credentials.from_service_account_file('eminent-subject-387503-38373d56ce0e.json')
-credentials = credentials.with_scopes(['https://www.googleapis.com/auth/spreadsheets'])
-# Authorize the credentials and create a client to access the Google Sheets API
-client = gspread.authorize(credentials)
-
-@bot.command(name='reload')
-async def reload_module(ctx, module):
-    bot.reload_extension(module)
-    await ctx.send(f"Reloaded module: {module}")
-
-@bot.command(name='disc')
-async def discography(ctx):
-    spreadsheet_id = "18_crzaHZ00xbr9OdjmetRTKVJV1OvVMQeCDUgWvnHCU"
-    try:
-        spreadsheet = client.open_by_key(spreadsheet_id)
-        worksheet = spreadsheet.get_worksheet(0)  # Replace 0 with the index of the desired worksheet
-        # Fetch data from the worksheet
-        data = worksheet.get_all_values()
-        # Create the discography message
-        discography_message = 'Discography:\n'
-        for row in data:
-            album = row[0]
-            songs = row[1:]
-            discography_message += f'Album: {album}\n'
-            for song in songs:
-                discography_message += f'- {song}\n'
-            discography_message += '\n'
-        # Send the discography message
-        await ctx.send(discography_message)
-    except gspread.exceptions.APIError as e:
-        print(f"Error accessing Spreadsheet {spreadsheet_id}: {str(e)}")
-
-@bot.command(name='sheets')
-async def quarterly_earnings(ctx):
-    spreadsheet_ids = [
-        "1fZdlxKl-M4iyPmBa243pivpQ14CGdiY9Rpn1OmgyjNI",
-        "15AnwgH1CdUneQpKDlcHT1UKghEb7K9SStzpclk_WA30",
-        "1lvUTXUcPtV9njNBRrp5mWGS2zmmWeSjJmX4PVXqUweM",
-        # Add the remaining spreadsheet IDs here
-    ]
-    earnings_message = 'Quarterly Earnings:\n'
-    for i, spreadsheet_id in enumerate(spreadsheet_ids, start=1):
-        try:
-            spreadsheet = client.open_by_key(spreadsheet_id)
-            # You can modify the code here to fetch the desired data from each spreadsheet
-            earnings_message += f'Spreadsheet {i}: {spreadsheet.title}\n'
-        except gspread.exceptions.APIError as e:
-            print(f"Error accessing Spreadsheet {spreadsheet_id}: {str(e)}")
-    # Send the earnings message
-    await ctx.send(earnings_message)
 
 @bot.event
 async def on_message(message):
@@ -105,4 +53,4 @@ async def on_ready():
     print(f'{bot.user.name} has connected to Discord!')
 
 # Run the bot with your bot token
-bot.run("TOKEN")
+bot.run("YOUR_BOT_TOKEN")
