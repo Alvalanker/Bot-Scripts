@@ -1,0 +1,52 @@
+import requests
+import datetime
+import time
+
+# Set up the necessary variables
+group_id = '578119692870047'  # Replace with the ID of the Facebook group
+access_token = 'TOKEN'  # Replace with your access token
+link = 'https://linktr.ee/alvalanker'  # Replace with the link you want to post
+
+# Define the desired posting times in EST
+posting_times = [
+    (6, 0),   # 6 AM EST
+    (12, 0),  # 12 PM EST
+    (19, 0),  # 7 PM EST
+    (2, 0),   # 2 AM EST
+]
+
+while True:
+    # Get the current time in EST
+    current_time = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=-5)))  # EST offset is -5 hours
+
+    # Check if the current time matches any of the desired posting times
+    for posting_time in posting_times:
+        if current_time.hour == posting_time[0] and current_time.minute == posting_time[1]:
+            # Create the post data
+            data = {
+                'message': 'New album coming this summer!
+#alvalanker #new #newmusic #music #musicvideo 	
+https://linktr.ee/alvalanker
+Spotify https://open.spotify.com/artist/12O6L9BEaefqiZ5eQ2XD9R
+
+APPLE MUSIC https://music.apple.com/us/artist/alvalanker/1403509237
+
+SoundCloud https://soundcloud.com/alvalanker/radiation
+
+Discord https://discord.gg/tzycU3vf6r
+
+Instagram https://www.instagram.com/alvalanker1/
+
+Facebook http://www.facebook.com/relicradiationmusic
+
+YouTube Musician/Podcaster - Streaming Guitar, Videogames, Original Music and more.
+
+https://www.youtube.com/@alvalankerofficial!',
+                'link': link,
+            }
+
+            # Send the POST request to the Graph API
+            url = f'https://graph.facebook.com/{group_id}/feed?access_token={access_token}'
+            response = requests.post(url, data=data)
+
+            # Check the response
